@@ -1,0 +1,55 @@
+-------------- done
+
+i'm an arabic teacher and i want to build a website that takes students' Text piece to analyze their grammar and Error correction and give them feedback on their writing skills. how can i do that?
+
+- i want the website to be user-friendly and easy to navigate.
+
+- i want the functionality with python language.
+
+- the UI should be html/CSS based.
+
+-------------- done
+
+https://www.arabitools.com/pythontools.html
+
+read this documentation very well to understand how implement this insted of pyarabic.
+
+-------------- done
+
+Ok, insted of using pachkaeges to analyze arabic text, use openai api (gpt 3.5) to analyze the text and give feedback on grammar and writing skills. (please read the documentation very well to understand how to use openai api for free)
+
+-------------- done
+
+ابيك تربط الجمل بشكل صحبح وتضهر الاخطاء، مثلا النحوية او الاملائيه والهمزه والحركات. وتشرح ليه الخطأ وكيف اصلحه.
+
+-------------- done
+
+اظهر اخطاء الكلمات بعد ربطها بالجمل. على شكل جدول
+
+-------------- done
+
+add a simple login on alert .. and this should be "" as username and ""! this login shows up when after i press submit button.. also after successful login, it should save that i have logged in for the session so i dont have to login again until i close the browser. maybe save it in a cookie or session.
+
+-------------- done
+
+update the the README file to make eazy and very simple and friendly instructions on how to run the project locally.. also don't explain much.. reduce the text to the minimum possible.
+
+also remove the QUICKSTART file.
+
+-------------- done
+
+- remove the 📊 النتيجة section from the output html page copletely.
+
+- add the academy logo that i added it at the static folder.
+
+-------------- done
+
+- insted adding the logo in the top.. add it in the left side and make the header content in the right side.
+
+- also make this image as the website icon (favicon).
+
+- insted of typying the api key in the app.py file, read it from a .env file!
+
+- i added preview.png in the static folder.. use it in README file as a preview image for the project.
+
+- make the the README file in arabic and english.

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محلل النحو العربي - Arabic Grammar Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-container">
+                <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Academy Logo" class="academy-logo">
+                <div class="header-content">
+                    <h1>📝 محلل النحو العربي</h1>
+                    <p class="subtitle">Arabic Grammar Analyzer & Error Correction</p>
+                    <p class="description">أداة ذكية لتحليل النصوص العربية وتصحيح الأخطاء النحوية</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2>✍️ أدخل النص للتحليل</h2>
+                <textarea id="arabicText" class="text-input" placeholder="اكتب أو الصق النص العربي هنا..."
+                    rows="8"></textarea>
+
+                <div class="button-group">
+                    <button id="analyzeBtn" class="btn btn-primary">
+                        <span class="btn-icon">🔍</span>
+                        تحليل النص
+                    </button>
+                    <button id="clearBtn" class="btn btn-secondary">
+                        <span class="btn-icon">🗑️</span>
+                        مسح
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>جاري التحليل...</p>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results" class="results-section hidden">
+                <!-- Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-value" id="sentenceCount">0</div>
+                        <div class="stat-label">جملة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✏️</div>
+                        <div class="stat-value" id="wordCount">0</div>
+                        <div class="stat-label">كلمة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">❌</div>
+                        <div class="stat-value" id="errorCount">0</div>
+                        <div class="stat-label">خطأ</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💡</div>
+                        <div class="stat-value" id="suggestionCount">0</div>
+                        <div class="stat-label">اقتراح</div>
+                    </div>
+                </div>
+
+                <!-- Errors -->
+                <div id="errorsSection" class="feedback-section hidden">
+                    <h3 class="section-title error-title">❌ الأخطاء المكتشفة</h3>
+
+                    <!-- Errors Table -->
+                    <div class="table-container">
+                        <table class="errors-table">
+                            <thead>
+                                <tr>
+                                    <th>الجملة</th>
+                                    <th>الكلمة الخاطئة</th>
+                                    <th>التصحيح</th>
+                                    <th>نوع الخطأ</th>
+                                    <th>الشرح</th>
+                                </tr>
+                            </thead>
+                            <tbody id="errorsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="errorsList" class="feedback-list" style="margin-top: 20px;"></div>
+                </div>
+
+                <!-- Suggestions -->
+                <div id="suggestionsSection" class="feedback-section hidden">
+                    <h3 class="section-title suggestion-title">💡 اقتراحات للتحسين</h3>
+                    <div id="suggestionsList" class="feedback-list"></div>
+                </div>
+
+                <!-- Grammar Analysis -->
+                <div id="grammarSection" class="feedback-section hidden">
+                    <h3 class="section-title grammar-title">📚 التحليل النحوي</h3>
+                    <div class="table-container">
+                        <table id="grammarTable" class="grammar-table">
+                            <thead>
+                                <tr>
+                                    <th>الكلمة</th>
+                                    <th>الجذر</th>
+                                    <th>نوع الكلمة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="grammarTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Overall Feedback -->
+                <div id="overallFeedback" class="feedback-section hidden">
+                    <h3 class="section-title" style="color: #6366f1; border-color: #6366f1;">📝 ملاحظات عامة</h3>
+                    <div class="overall-feedback-box">
+                        <p id="overallFeedbackText"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message hidden">
+                ✅ تم التحليل بنجاح!
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div id="first">
+                <p>صُمم لمساعدة الطلاب على تحسين مهاراتهم في الكتابة العربية</p>
+                <p class="footer-small">Designed to help students improve their Arabic writing skills</p>
+            </div>
+            <p id="sultan">بواسطة الأستاذ سلطان الوليعي</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
