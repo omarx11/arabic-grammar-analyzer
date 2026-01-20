@@ -30,9 +30,9 @@ const feedbackSection = document.getElementById('feedbackSection');
 const feedbackText = document.getElementById('feedbackText');
 const historyList = document.getElementById('historyList');
 
-let currentAnalysisId = null;
-let currentShareId = null;
-let currentIsPublic = false;
+window.currentAnalysisId = null;
+window.currentShareId = null;
+window.currentIsPublic = false;
 let currentOriginalText = '';
 
 // Tab switching
@@ -107,7 +107,7 @@ if (showOriginalTextBtn) {
 const deleteResultBtn = document.getElementById('deleteResultBtn');
 if (deleteResultBtn) {
     deleteResultBtn.addEventListener('click', () => {
-        if (currentAnalysisId) {
+        if (window.currentAnalysisId) {
             deleteCurrentAnalysis();
         } else {
             showNotification('لا يوجد تحليل لحذفه', 'error');
@@ -119,8 +119,8 @@ if (deleteResultBtn) {
 const shareResultBtn = document.getElementById('shareResultBtn');
 if (shareResultBtn) {
     shareResultBtn.addEventListener('click', () => {
-        if (currentAnalysisId && currentShareId) {
-            showShareModal(currentAnalysisId, currentShareId, currentIsPublic);
+        if (window.currentAnalysisId && window.currentShareId) {
+            showShareModal(window.currentAnalysisId, window.currentShareId, window.currentIsPublic);
         } else {
             showNotification('لا توجد نتيجة متاحة للمشاركة', 'error');
         }
@@ -179,9 +179,9 @@ async function performAnalysis(text, studentName) {
             throw new Error(data.error_ar || data.error || 'حدث خطأ في التحليل');
         }
         
-        currentAnalysisId = data.analysis_id;
-        currentShareId = data.share_id;
-        currentIsPublic = data.is_public || false;
+        window.currentAnalysisId = data.analysis_id;
+        window.currentShareId = data.share_id;
+        window.currentIsPublic = data.is_public || false;
         
         displayResults(data);
         
@@ -487,23 +487,23 @@ async function deleteAnalysis(id) {
     });
 }
 async function deleteCurrentAnalysis() {
-    if (!currentAnalysisId) {
+    if (!window.currentAnalysisId) {
         showNotification('لا يوجد تحليل لحذفه', 'error');
         return;
     }
     
     showConfirm('هل أنت متأكّد من حذف هذا التحليل؟', async () => {
         try {
-            const response = await fetch(`/history/${currentAnalysisId}/delete`, { method: 'POST' });
+            const response = await fetch(`/history/${window.currentAnalysisId}/delete`, { method: 'POST' });
             const data = await response.json();
             
             if (data.success) {
                 showNotification('✅ تم الحذف بنجاح', 'success');
                 // Hide results and clear current analysis
                 hideResults();
-                currentAnalysisId = null;
-                currentShareId = null;
-                currentIsPublic = false;
+                window.currentAnalysisId = null;
+                window.currentShareId = null;
+                window.currentIsPublic = false;
                 // Hide buttons
                 const shareResultBtn = document.getElementById('shareResultBtn');
                 const deleteResultBtn = document.getElementById('deleteResultBtn');
@@ -519,12 +519,12 @@ async function deleteCurrentAnalysis() {
     });
 }
 async function downloadPdf() {
-    if (!currentAnalysisId) {
+    if (!window.currentAnalysisId) {
         alert('لا يوجد تحليل للتنزيل');
         return;
     }
     
-    window.location.href = `/export/pdf/${currentAnalysisId}`;
+    window.location.href = `/export/pdf/${window.currentAnalysisId}`;
 }
 
 async function downloadAnalysisPdf(id) {
@@ -537,9 +537,9 @@ function clearAll() {
     if (imageInput) imageInput.value = '';
     
     // Reset share variables
-    currentAnalysisId = null;
-    currentShareId = null;
-    currentIsPublic = false;
+    window.currentAnalysisId = null;
+    window.currentShareId = null;
+    window.currentIsPublic = false;
     
     // Hide share button
     const shareResultBtn = document.getElementById('shareResultBtn');
@@ -866,8 +866,8 @@ function showNotification(message, type = 'info') {
                 updateToggleUI(data.is_public);
                 
                 // Update current state if this is the current analysis
-                if (currentAnalysisId === analysisId) {
-                    currentIsPublic = data.is_public;
+                if (window.currentAnalysisId === analysisId) {
+                    window.currentIsPublic = data.is_public;
                 }
                 
                 // Update the specific history item UI

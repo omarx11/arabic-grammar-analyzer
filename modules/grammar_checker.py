@@ -36,8 +36,7 @@ def analyze_arabic_text(text):
     if not text:
         feedback['errors'].append({
             'type': 'empty',
-            'message': 'رجاءً أدخل نصًّا للتحليل.',
-            'message_en': 'Please enter text to analyze'
+            'message': 'رجاءً أدخل نصًّا للتحليل.'
         })
         return feedback
     
@@ -49,89 +48,80 @@ def analyze_arabic_text(text):
     words = text.split()
     feedback['word_count'] = len(words)
     
-    # Use AI for comprehensive analysis
-    prompt = f"""أنت مُعلّم لغة عربية خبير ومُتخصّص في النحو والصرف والإملاء والتشكيل. حلِّل النصّ بدقّة عالية جدًا مع مراعاة ترابط الجمل وسلامة المعنى العام.
+    # Use AI for comprehensive analysis with optimized few-shot learning
+    prompt = f"""أنت محلل لغة عربية خبير. افحص النص وسجل الأخطاء الإملائية والنحوية الواضحة فقط.
 
-===== بداية نصّ الطالب =====
+===== النص =====
 {text}
-===== نهاية نصّ الطالب =====
+===== نهاية =====
 
-📋 متطلبات التحليل (الأولوية: فهم الجملة ومعناها قبل الحكم على الحركات، مع تغطية شاملة لكل الأخطاء):
+⚡ **قواعد أساسية:**
+1. ⛔ لا تصحح الكلمات العامية إلى الفصحى (روحت، رحت، شلون، زين، بس، حلو، يلا، شوي، وين ← كلها مقبولة)
+2. صحح فقط الأخطاء الإملائية الحقيقية
+3. لا تضع أخطاء على كلمات صحيحة (كلكم، كلهم ← صحيحة)
 
-1️⃣ **الحركات الزائدة أو غير الصحيحة:**
-    - لا تعتبر التشكيل خطأ إلّا إذا كان مخالفًا للقاعدة أو يغيّر المعنى
-    - الحرف الواحد لا يجب أن يحتوي على أكثر من حركتين (مثل: شدّة + فتحة)
-    - ثلاث حركات متتالية أو أكثر تُعدّ خطأ
-    - التنوين (ً ٌ ٍ) مع الشدّة (ّ) على نفس الحرف خطأ
-    - إذا كانت الكلمة مُشكّلة بشكل غير مألوف أو غير صحيح نحويًا، سجّلها كخطأ حركات
+📋 **أخطاء تحتاج تصحيح:**
+• نقص "ال": اسلام→السلام، سوق(محدد)→السوق، بيت(محدد)→البيت
+• تاء مربوطة/مفتوحة: ورحمت→ورحمة، جماعه→جماعة
+• اسم الجلالة: اللاه→الله
+• كلمات خاطئة: تبرقاتا→وبركاته، اشللونكن→شلونكن
+• همزة: امس→أمس
+• كلمات متصلة: ماعرفت→ما عرفت
+• ضمائر: عليكن→عليكم (للمذكر)
 
-2️⃣ **الحركات الخاطئة (مهمّ جدًّا):**
-   - تحقّق من صحّة موضع كل حركة على كل حرف
-   - تأكّد أن الحركة مناسبة لمعنى الكلمة ونحوها
-   - راجع الكسرة (ِ) والفتحة (َ) والضمّة (ُ) على كل حرف
-   - تحقّق من مطابقة الحركات للأوزان العربية الصحيحة
-   - انتبه للحركات الخاطئة التي تُغيّر المعنى أو تجعل الكلمة غير صحيحة نحويًّا
+🎯 **أمثلة سريعة:**
 
-3️⃣ **الأخطاء الأخرى:**
-   - الأخطاء النحوية (الإعراب، التذكير/التأنيث، الفعل/الفاعل)
-   - الأخطاء الإملائية
-   - أخطاء الهمزة (همزة القطع والوصل، الهمزة المتوسّطة)
-   - الأخطاء الأسلوبية (التكرار، الركاكة)
+✓ "اسلام عليكن" → أخطاء: اسلام(السلام)، عليكن(عليكم)
+✓ "ورحمت اللاه تبرقاتا" → أخطاء: ورحمت(ورحمة)، اللاه(الله)، تبرقاتا(وبركاته)
+✓ "اشللونكن يا جماعه كلكم" → أخطاء: اشللونكن(شلونكن)، جماعه(جماعة) | ✓كلكم صحيح
+✓ "امس روحت سوق" → أخطاء: امس(أمس)، سوق(السوق) | ✓روحت صحيح(عامية)
+✓ "بس ماعرفت زين" → أخطاء: ماعرفت(ما عرفت) | ✓بس وزين صحيحة(عامية)
 
-4️⃣ **ترابط الجمل والمعنى:**
-    - اربط الجمل سياقيًّا وحدّد إن كان هناك انقطاع أو تكرار غير مبرّر
-    - إن وُجد خلل في ترابط الجمل أو المعنى العام، سجّله كخطأ أسلوبي مع شرح واضح
+⚠️ مهم: أرجع JSON صالح فقط - لا نص قبله أو بعده!
 
-⚠️ مهمّ: افحص كل كلمة بعناية شديدة، وغطِّ جميع الأخطاء الممكنة. لا تُبالغ في أخطاء الحركات إذا كانت صحيحة، لكن لا تُهمل أي خطأ واضح في التشكيل أو زيادة الحركات. ركّز على الأخطاء النحوية والإملائية والهمزات وربط الجمل.
-
-📄 قدّم التحليل بصيغة JSON التالية فقط:
+📄 صيغة JSON (التزم بها تمامًا):
 {{
   "errors": [
     {{
-      "type": "نوع الخطأ (حركات زائدة/حركات خاطئة/نحوي/إملائي/همزة/أسلوبي)",
-      "word": "الكلمة الخاطئة من نصّ الطالب (بنفس الحركات الموجودة)",
-      "sentence": "الجملة الكاملة من نصّ الطالب",
-      "correction": "التصحيح المقترح",
-      "message": "شرح الخطأ بالتفصيل",
-      "message_en": "Error explanation in English",
-      "explanation": "شرح القاعدة النحوية أو سبب الخطأ",
+      "type": "إملائي",
+      "word": "الكلمة الخاطئة",
+      "sentence": "الجملة الكاملة",
+      "correction": "التصحيح",
+      "message": "شرح الخطأ",
+      "explanation": "شرح القاعدة",
       "example": "مثال على الاستخدام الصحيح"
     }}
   ],
-  "suggestions": [
-    {{
-      "type": "نوع الاقتراح",
-      "message": "الاقتراح بالعربية",
-      "message_en": "Suggestion in English",
-      "improvement": "كيفية التحسين"
-    }}
-  ],
-  "grammar_analysis": [
-    {{"word": "الكلمة من نصّ الطالب", "lemma": "الجذر", "pos": "نوع الكلمة"}}
-  ],
-  "score": رقم من 0 إلى 100,
-  "overall_feedback": "ملاحظات عامّة على نصّ الطالب"
-}}
-
-تذكّر: أرجع JSON صالح فقط بدون أيّ نصّ إضافي."""
+  "suggestions": [],
+  "grammar_analysis": [],
+  "score": 85,
+  "overall_feedback": "ملاحظات عامة"
+}}"""
 
     try:
-        # Call OpenAI API
+        # Call OpenAI API with optimized settings
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "أنت مُعلّم لغة عربية خبير في النحو والصرف والإملاء والهمزات والتشكيل. تحلّل النصوص بدقّة، وتربط الجمل سياقيًّا، وتُظهر الأخطاء النحوية والإملائية والهمزات والحركات عند الحاجة فقط. لا تُبالغ في أخطاء التشكيل إذا لم تكن خاطئة فعلاً."},
+                {"role": "system", "content": "محلل لغة عربية خبير. قواعد: 1) لا تصحح العامية للفصحى (روحت،شلون،زين،بس=مقبولة) 2) صحح الأخطاء الإملائية فقط 3) كلكم/كلهم صحيحة 4) تجنب False Positives. أرجع JSON صالح فقط."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.1,
-            max_tokens=2500
+            temperature=0.2,
+            max_tokens=2000,
+            response_format={"type": "json_object"}
         )
         
         # Extract the response
         result_text = response.choices[0].message.content.strip()
         
-        # Clean JSON from markdown code blocks
+        # Clean JSON from markdown code blocks and other formatting
         result_text = result_text.replace('```json', '').replace('```', '').strip()
+        
+        # Remove any text before the first { and after the last }
+        if '{' in result_text and '}' in result_text:
+            start_idx = result_text.find('{')
+            end_idx = result_text.rfind('}') + 1
+            result_text = result_text[start_idx:end_idx]
         
         try:
             analysis = json.loads(result_text)
@@ -157,19 +147,21 @@ def analyze_arabic_text(text):
             else:
                 feedback['score'] = max(0, 100 - len(feedback['errors']) * 15 - len(feedback['suggestions']) * 5)
         
-        except json.JSONDecodeError:
-            feedback['suggestions'].append({
-                'type': 'analysis',
-                'message': 'تم التحليل بنجاح.',
-                'message_en': 'Analysis completed'
+        except json.JSONDecodeError as e:
+            # Log the error for debugging
+            print(f"JSON Parse Error: {str(e)}")
+            print(f"Raw response: {result_text[:500]}")  # Print first 500 chars
+            
+            feedback['errors'].append({
+                'type': 'parse_error',
+                'message': f'حدث خطأ في تحليل النتائج: {str(e)}'
             })
-            feedback['score'] = 75
+            feedback['score'] = 0
     
     except Exception as e:
         feedback['errors'].append({
             'type': 'api_error',
-            'message': f'حدث خطأ أثناء التحليل: {str(e)}',
-            'message_en': f'Analysis error: {str(e)}'
+            'message': f'حدث خطأ أثناء التحليل: {str(e)}'
         })
         feedback['score'] = 0
     
