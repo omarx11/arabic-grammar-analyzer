@@ -1,0 +1,61 @@
+/* ==============================================
+   TABLES
+   ============================================== */
+
+/* Table Container */
+.table-container {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+/* Grammar & Errors Tables */
+.grammar-table, 
+.errors-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    transition: background 0.3s ease;
+}
+
+.grammar-table th, 
+.errors-table th {
+    background: var(--primary-color);
+    color: white;
+    padding: 15px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.errors-table th {
+    background: var(--danger-color);
+}
+
+.grammar-table td, 
+.errors-table td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: right;
+    vertical-align: top;
+    line-height: 1.6;
+}
+
+.grammar-table tbody tr:hover, 
+.errors-table tbody tr:hover {
+    background: var(--bg-color);
+}
+
+.grammar-table tbody tr:last-child td, 
+.errors-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.errors-table mark {
+    background: rgba(239, 68, 68, 0.3);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+    color: var(--text-primary);
+}

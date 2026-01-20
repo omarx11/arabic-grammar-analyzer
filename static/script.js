@@ -268,10 +268,10 @@ function populateResultsDisplay(data, containerElement, originalText = null) {
             result.errors.forEach(error => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><strong style="color:#dc2626;">${error.word || '-'}</strong></td>
-                    <td><strong style="color:#16a34a;">${error.correction || '-'}</strong></td>
-                    <td><span class="error-tag">${error.type || 'خطأ'}</span></td>
-                    <td>${error.explanation || error.message || '-'}</td>
+                    <td data-label="الكلمة"><strong style="color:#dc2626;">${error.word || '-'}</strong></td>
+                    <td data-label="التصحيح"><strong style="color:#16a34a;">${error.correction || '-'}</strong></td>
+                    <td data-label="النوع"><span class="error-tag">${error.type || 'خطأ'}</span></td>
+                    <td data-label="الشرح">${error.explanation || error.message || '-'}</td>
                 `;
                 errorsTableBody.appendChild(row);
             });

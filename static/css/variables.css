@@ -1,0 +1,53 @@
+/* ==============================================
+   CSS CUSTOM PROPERTIES (VARIABLES)
+   ============================================== */
+
+:root {
+    /* Colors */
+    --primary-color: #2563eb;
+    --secondary-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    
+    /* Background */
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #ffffff;
+    --modal-bg: #ffffff;
+    --modal-overlay: rgba(0, 0, 0, 0.5);
+    
+    /* Text */
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    
+    /* Borders */
+    --border-color: #e2e8f0;
+    
+    /* Shadows */
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    /* Gradients */
+    --gradient-start: #667eea;
+    --gradient-end: #764ba2;
+}
+
+/* Dark Mode Variables */
+body.dark-mode {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    --gradient-start: #1e40af;
+    --gradient-end: #7c3aed;
+    --input-bg: #334155;
+    --tab-bg: #334155;
+    --tab-active-bg: #475569;
+    --modal-bg: #1e293b;
+    --modal-overlay: rgba(0, 0, 0, 0.7);
+}

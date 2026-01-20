@@ -1,0 +1,101 @@
+/* ==============================================
+   HISTORY
+   ============================================== */
+
+/* History Section */
+.history-section {
+    padding: 20px;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.history-header h3 {
+    color: var(--text-primary);
+}
+
+.history-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.history-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.history-info strong {
+    color: var(--primary-color);
+    min-width: 120px;
+}
+
+.history-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* History Results Inline Display */
+.history-results {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg-color);
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+}
+
+.history-results .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.history-results .results-header h3 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.history-results .results-header .btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    flex: none;
+    min-width: auto;
+}
+
+/* Students Grid */
+.students-grid {
+    margin-bottom: 20px;
+}
+
+.students-grid h4 {
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.students-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}

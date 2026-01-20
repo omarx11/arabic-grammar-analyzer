@@ -49,14 +49,15 @@
 
 <body>
     <!-- Theme Toggle Button -->
-    <button id="themeToggle" class="theme-toggle" style="position: fixed; top: 20px; left: 20px; z-index: 1000;" aria-label="التبديل إلى الوضع الداكن">🌙</button>
-    
+    <button id="themeToggle" class="theme-toggle" style="position: fixed; top: 20px; left: 20px; z-index: 1000;"
+        aria-label="التبديل إلى الوضع الداكن">🌙</button>
+
     <div class="error-container">
         <div class="error-icon">⚠️</div>
         <h1>نعتذر، حدث خطأ</h1>
         <p>{{ message }}</p>
     </div>
-    
+
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
 </body>
 

@@ -1,0 +1,135 @@
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 30px 20px;
+    }
+
+    .header-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .header-content {
+        text-align: center;
+    }
+
+    .academy-logo {
+        max-width: 100px;
+        min-width: 100px;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .content {
+        padding: 25px 20px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .score-circle {
+        width: 120px;
+        height: 120px;
+    }
+
+    .score-number {
+        font-size: 2rem;
+    }
+
+    /* Responsive Table - Card Layout for Mobile */
+    .table-container {
+        border: none;
+    }
+
+    .errors-table,
+    .grammar-table {
+        border: 0;
+    }
+
+    .errors-table thead,
+    .grammar-table thead {
+        display: none;
+    }
+
+    .errors-table tbody,
+    .grammar-table tbody {
+        display: block;
+    }
+
+    .errors-table tr,
+    .grammar-table tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--card-bg);
+        padding: 15px;
+        box-shadow: var(--shadow);
+    }
+
+    .errors-table td,
+    .grammar-table td {
+        display: block;
+        text-align: right;
+        padding: 10px 5px;
+        border: none;
+        position: relative;
+        padding-right: 45%;
+        min-height: 30px;
+    }
+
+    .errors-table td::before,
+    .grammar-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        right: 10px;
+        font-weight: 700;
+        color: var(--primary-color);
+        white-space: nowrap;
+    }
+
+    /* Specific styling for error table */
+    .errors-table tr {
+        border-right: 4px solid var(--danger-color);
+    }
+
+    .errors-table td::before {
+        color: var(--danger-color);
+    }
+
+    /* Specific styling for grammar table */
+    .grammar-table tr {
+        border-right: 4px solid var(--primary-color);
+    }
+
+    .errors-table td:not(:last-child),
+    .grammar-table td:not(:last-child) {
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 12px;
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
