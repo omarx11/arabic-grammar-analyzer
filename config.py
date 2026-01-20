@@ -16,23 +16,27 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
     
     # Upload settings
-    UPLOAD_FOLDER = 'uploads'
+    UPLOAD_FOLDER = '/tmp/uploads'  # Use /tmp for Vercel serverless
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff'}
     
     # Database
-    DB_PATH = os.path.join('data', 'analysis_history.db')
+    DB_PATH = os.path.join('/tmp', 'analysis_history.db')  # Use /tmp for Vercel
     
     # Cache
-    CACHE_DIR = os.path.join('data', 'cache')
+    CACHE_DIR = os.path.join('/tmp', 'cache')  # Use /tmp for Vercel
     CACHE_DURATION_HOURS = 24
     
-    # Production settings
+    # Vercel/Production settings
     DEBUG = False
     TESTING = False
+    IS_VERCEL = os.getenv('VERCEL', False)  # Detect if running on Vercel
 
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
+    UPLOAD_FOLDER = 'uploads'  # Local folder for development
+    DB_PATH = os.path.join('data', 'analysis_history.db')  # Local DB
+    CACHE_DIR = os.path.join('data', 'cache')  # Local cache
 
 class ProductionConfig(Config):
     """Production configuration"""

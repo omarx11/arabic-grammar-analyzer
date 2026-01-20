@@ -45,7 +45,7 @@ echo http://localhost:5000
 echo.
 echo Login with:
 echo Username: teacher1
-echo Password: password123
+echo Password: 1234
 echo.
 echo Press Ctrl+C to stop the server
 echo ========================================
