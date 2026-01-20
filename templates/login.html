@@ -11,10 +11,11 @@
         .login-container {
             max-width: 450px;
             margin: 100px auto;
-            background: white;
+            background: var(--card-bg);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
         }
 
         .login-header {
@@ -23,12 +24,12 @@
         }
 
         .login-header h1 {
-            color: #2563eb;
+            color: var(--primary-color);
             margin-bottom: 10px;
         }
 
         .login-header p {
-            color: #64748b;
+            color: var(--text-secondary);
         }
 
         .form-group {
@@ -38,16 +39,19 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #1e293b;
+            color: var(--text-primary);
             font-weight: 600;
         }
 
         .form-group input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
             transition: border-color 0.3s;
         }
 
@@ -85,6 +89,9 @@
 </head>
 
 <body>
+    <!-- Theme Toggle Button -->
+    <button id="themeToggle" class="theme-toggle" style="position: fixed; top: 20px; left: 20px; z-index: 1000;" aria-label="التبديل إلى الوضع الداكن">🌙</button>
+    
     <div class="login-container">
         <div class="login-header">
             <h1>🔐 تسجيل الدخول</h1>
@@ -113,6 +120,8 @@
             <button type="submit" class="login-btn">تسجيل الدخول</button>
         </form>
     </div>
+    
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
 </body>
 
 </html>

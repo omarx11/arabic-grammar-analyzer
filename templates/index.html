@@ -24,6 +24,7 @@
                     </div>
                 </div>
                 <div class="header-actions">
+                    <button id="themeToggle" class="theme-toggle" aria-label="التبديل إلى الوضع الداكن">🌙</button>
                     <span class="version-badge">v2.0.0</span>
                     <a href="{{ url_for('logout') }}" class="btn btn-secondary">🚪 تسجيل الخروج</a>
                 </div>
@@ -344,6 +345,7 @@
 </div>
 </div>
 
+<script src="{{ url_for('static', filename='theme.js') }}"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
