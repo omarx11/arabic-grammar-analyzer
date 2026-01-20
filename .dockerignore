@@ -1,5 +1,7 @@
-# Environment variables
-.env
+# Git
+.git
+.gitignore
+.gitattributes
 
 # Python
 __pycache__/
@@ -7,12 +9,12 @@ __pycache__/
 *$py.class
 *.so
 .Python
-venv/
-env/
-ENV/
 *.egg-info/
 dist/
 build/
+venv/
+env/
+ENV/
 
 # IDE
 .vscode/
@@ -24,10 +26,14 @@ build/
 .DS_Store
 Thumbs.db
 
-# Application Data (runtime generated)
+# Application Data (should be mounted as volumes)
 data/
 uploads/
 errors/
+
+# Environment (set in container)
+.env
+.env.example
 
 # Development/Testing Files
 test_setup.py
@@ -36,5 +42,12 @@ PRODUCTION_SUMMARY.md
 optmize/
 optmize.txt
 
+# Documentation (optional - include if needed)
+README.md
+DEPLOYMENT.md
+
 # Logs
 *.log
+
+# Windows batch files
+start.bat

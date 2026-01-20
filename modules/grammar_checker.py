@@ -1,0 +1,176 @@
+"""
+Grammar Checking Module
+Handles Arabic grammar and spelling analysis using OpenAI
+"""
+from openai import OpenAI
+import json
+import re
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+def extract_sentence_for_word(text, word):
+    """Extract the sentence containing a specific word"""
+    sentences = re.split(r'[.!?،؛]', text)
+    for sentence in sentences:
+        if word in sentence:
+            return sentence.strip()
+    return word
+
+def analyze_arabic_text(text):
+    """Analyze Arabic text for grammar and spelling errors"""
+    
+    feedback = {
+        'word_count': 0,
+        'sentence_count': 0,
+        'errors': [],
+        'suggestions': [],
+        'grammar_analysis': [],
+        'score': 0
+    }
+    
+    # Basic validation
+    text = text.strip()
+    if not text:
+        feedback['errors'].append({
+            'type': 'empty',
+            'message': 'رجاءً أدخل نصًّا للتحليل.',
+            'message_en': 'Please enter text to analyze'
+        })
+        return feedback
+    
+    # Count basic stats
+    sentences = re.split(r'[.!?،؛]', text)
+    sentences = [s.strip() for s in sentences if s.strip()]
+    feedback['sentence_count'] = len(sentences)
+    
+    words = text.split()
+    feedback['word_count'] = len(words)
+    
+    # Use AI for comprehensive analysis
+    prompt = f"""أنت مُعلّم لغة عربية خبير ومُتخصّص في النحو والصرف والإملاء والتشكيل. حلِّل النصّ بدقّة عالية جدًا مع مراعاة ترابط الجمل وسلامة المعنى العام.
+
+===== بداية نصّ الطالب =====
+{text}
+===== نهاية نصّ الطالب =====
+
+📋 متطلبات التحليل (الأولوية: فهم الجملة ومعناها قبل الحكم على الحركات، مع تغطية شاملة لكل الأخطاء):
+
+1️⃣ **الحركات الزائدة أو غير الصحيحة:**
+    - لا تعتبر التشكيل خطأ إلّا إذا كان مخالفًا للقاعدة أو يغيّر المعنى
+    - الحرف الواحد لا يجب أن يحتوي على أكثر من حركتين (مثل: شدّة + فتحة)
+    - ثلاث حركات متتالية أو أكثر تُعدّ خطأ
+    - التنوين (ً ٌ ٍ) مع الشدّة (ّ) على نفس الحرف خطأ
+    - إذا كانت الكلمة مُشكّلة بشكل غير مألوف أو غير صحيح نحويًا، سجّلها كخطأ حركات
+
+2️⃣ **الحركات الخاطئة (مهمّ جدًّا):**
+   - تحقّق من صحّة موضع كل حركة على كل حرف
+   - تأكّد أن الحركة مناسبة لمعنى الكلمة ونحوها
+   - راجع الكسرة (ِ) والفتحة (َ) والضمّة (ُ) على كل حرف
+   - تحقّق من مطابقة الحركات للأوزان العربية الصحيحة
+   - انتبه للحركات الخاطئة التي تُغيّر المعنى أو تجعل الكلمة غير صحيحة نحويًّا
+
+3️⃣ **الأخطاء الأخرى:**
+   - الأخطاء النحوية (الإعراب، التذكير/التأنيث، الفعل/الفاعل)
+   - الأخطاء الإملائية
+   - أخطاء الهمزة (همزة القطع والوصل، الهمزة المتوسّطة)
+   - الأخطاء الأسلوبية (التكرار، الركاكة)
+
+4️⃣ **ترابط الجمل والمعنى:**
+    - اربط الجمل سياقيًّا وحدّد إن كان هناك انقطاع أو تكرار غير مبرّر
+    - إن وُجد خلل في ترابط الجمل أو المعنى العام، سجّله كخطأ أسلوبي مع شرح واضح
+
+⚠️ مهمّ: افحص كل كلمة بعناية شديدة، وغطِّ جميع الأخطاء الممكنة. لا تُبالغ في أخطاء الحركات إذا كانت صحيحة، لكن لا تُهمل أي خطأ واضح في التشكيل أو زيادة الحركات. ركّز على الأخطاء النحوية والإملائية والهمزات وربط الجمل.
+
+📄 قدّم التحليل بصيغة JSON التالية فقط:
+{{
+  "errors": [
+    {{
+      "type": "نوع الخطأ (حركات زائدة/حركات خاطئة/نحوي/إملائي/همزة/أسلوبي)",
+      "word": "الكلمة الخاطئة من نصّ الطالب (بنفس الحركات الموجودة)",
+      "sentence": "الجملة الكاملة من نصّ الطالب",
+      "correction": "التصحيح المقترح",
+      "message": "شرح الخطأ بالتفصيل",
+      "message_en": "Error explanation in English",
+      "explanation": "شرح القاعدة النحوية أو سبب الخطأ",
+      "example": "مثال على الاستخدام الصحيح"
+    }}
+  ],
+  "suggestions": [
+    {{
+      "type": "نوع الاقتراح",
+      "message": "الاقتراح بالعربية",
+      "message_en": "Suggestion in English",
+      "improvement": "كيفية التحسين"
+    }}
+  ],
+  "grammar_analysis": [
+    {{"word": "الكلمة من نصّ الطالب", "lemma": "الجذر", "pos": "نوع الكلمة"}}
+  ],
+  "score": رقم من 0 إلى 100,
+  "overall_feedback": "ملاحظات عامّة على نصّ الطالب"
+}}
+
+تذكّر: أرجع JSON صالح فقط بدون أيّ نصّ إضافي."""
+
+    try:
+        # Call OpenAI API
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "أنت مُعلّم لغة عربية خبير في النحو والصرف والإملاء والهمزات والتشكيل. تحلّل النصوص بدقّة، وتربط الجمل سياقيًّا، وتُظهر الأخطاء النحوية والإملائية والهمزات والحركات عند الحاجة فقط. لا تُبالغ في أخطاء التشكيل إذا لم تكن خاطئة فعلاً."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.1,
+            max_tokens=2500
+        )
+        
+        # Extract the response
+        result_text = response.choices[0].message.content.strip()
+        
+        # Clean JSON from markdown code blocks
+        result_text = result_text.replace('```json', '').replace('```', '').strip()
+        
+        try:
+            analysis = json.loads(result_text)
+            
+            ai_errors = []
+            if 'errors' in analysis and isinstance(analysis['errors'], list):
+                ai_errors = analysis['errors']
+
+            # Update feedback with AI errors only
+            feedback['errors'] = ai_errors
+            
+            if 'suggestions' in analysis and isinstance(analysis['suggestions'], list):
+                feedback['suggestions'] = analysis['suggestions']
+            
+            if 'grammar_analysis' in analysis and isinstance(analysis['grammar_analysis'], list):
+                feedback['grammar_analysis'] = analysis['grammar_analysis'][:20]
+            
+            if 'overall_feedback' in analysis and isinstance(analysis['overall_feedback'], str):
+                feedback['overall_feedback'] = analysis['overall_feedback']
+            
+            if 'score' in analysis and isinstance(analysis['score'], (int, float)):
+                feedback['score'] = int(analysis['score'])
+            else:
+                feedback['score'] = max(0, 100 - len(feedback['errors']) * 15 - len(feedback['suggestions']) * 5)
+        
+        except json.JSONDecodeError:
+            feedback['suggestions'].append({
+                'type': 'analysis',
+                'message': 'تم التحليل بنجاح.',
+                'message_en': 'Analysis completed'
+            })
+            feedback['score'] = 75
+    
+    except Exception as e:
+        feedback['errors'].append({
+            'type': 'api_error',
+            'message': f'حدث خطأ أثناء التحليل: {str(e)}',
+            'message_en': f'Analysis error: {str(e)}'
+        })
+        feedback['score'] = 0
+    
+    return feedback

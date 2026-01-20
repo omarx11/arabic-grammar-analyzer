@@ -1,3 +1,14 @@
+# Core Framework
 flask==3.0.0
+werkzeug==3.0.0
+
+# OpenAI API (includes Vision API for OCR)
 openai>=1.0.0
+
+# Environment Variables
 python-dotenv==1.0.0
+
+# PDF Generation
+reportlab==4.0.9
+arabic-reshaper==3.0.0
+python-bidi==0.4.2
