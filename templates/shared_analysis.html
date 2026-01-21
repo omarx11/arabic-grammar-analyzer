@@ -117,7 +117,21 @@
                             <td><strong style="color:#dc2626;">{{ error.word or '-' }}</strong></td>
                             <td><strong style="color:#16a34a;">{{ error.correction or '-' }}</strong></td>
                             <td><span class="error-tag">{{ error.type or 'خطأ' }}</span></td>
-                            <td>{{ error.explanation or error.message or '-' }}</td>
+                            <td class="explanation-cell">
+                                <div class="explanation-content">
+                                    {{ error.explanation or error.message or '-' }}
+                                    <div class="tooltip-icons">
+                                        {% if error.message %}
+                                        <span class="info-icon" data-tooltip="{{ error.message }}"
+                                            data-tooltip-type="message">ℹ️</span>
+                                        {% endif %}
+                                        {% if error.example %}
+                                        <span class="info-icon" data-tooltip="مثال: {{ error.example }}"
+                                            data-tooltip-type="example">💡</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -141,6 +155,30 @@
     </div>
 
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script>
+        // Tooltip functionality for shared page
+        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('click', (e) => {
+                const icon = e.target.closest('.info-icon');
+                if (icon) {
+                    e.stopPropagation();
+
+                    // Remove any existing active tooltips
+                    document.querySelectorAll('.info-icon.active').forEach(el => {
+                        if (el !== icon) el.classList.remove('active');
+                    });
+
+                    // Toggle this tooltip
+                    icon.classList.toggle('active');
+                } else {
+                    // Click outside - close all tooltips
+                    document.querySelectorAll('.info-icon.active').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

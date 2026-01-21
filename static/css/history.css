@@ -5,6 +5,7 @@
 /* History Section */
 .history-section {
     padding: 20px;
+    overflow: visible;
 }
 
 .history-header {
@@ -58,6 +59,7 @@
     background: var(--bg-color);
     border-radius: 12px;
     border: 2px solid var(--border-color);
+    overflow: visible;
 }
 
 .history-results .results-header {

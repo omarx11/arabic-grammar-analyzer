@@ -25,8 +25,26 @@ config = get_config(env)
 app = Flask(__name__)
 app.config.from_object(config)
 
+# Configure session security
+app.config['SESSION_COOKIE_SECURE'] = not config.DEBUG  # HTTPS only in production
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour
+
 # Ensure upload directory exists
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+try:
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+except Exception:
+    pass  # Fail silently if directory creation fails
+
+# Initialize database on startup
+from modules.database import init_db, USE_POSTGRES
+try:
+    init_db()
+    db_type = "PostgreSQL" if USE_POSTGRES else "SQLite"
+    print(f"✓ Database initialized ({db_type})")
+except Exception as e:
+    print(f"Database initialization: {e}")
 
 def allowed_file(filename):
     """Check if file extension is allowed"""
@@ -45,6 +63,11 @@ def not_found_error(error):
 @app.errorhandler(500)
 def internal_error(error):
     """Handle 500 errors"""
+    # Log the error for debugging
+    import traceback
+    print(f"500 Error: {error}")
+    print(traceback.format_exc())
+    
     if request.path.startswith('/api/'):
         return jsonify({'error': 'Internal server error'}), 500
     return render_template('error.html', message='عذرًا، حدث خطأ في الخادم'), 500
@@ -105,8 +128,8 @@ def index():
 def analyze():
     """API endpoint to analyze Arabic text (requires login)"""
     data = request.get_json()
-    text = data.get('text', '')
-    student_name = data.get('student_name', 'غير معروف')
+    text = data.get('text', '').strip()
+    student_name = data.get('student_name', 'غير معروف').strip()
     use_cache = data.get('use_cache', True)
     
     if not text:
@@ -124,7 +147,14 @@ def analyze():
     if use_cache:
         cached_result = get_cached_analysis(text)
         if cached_result:
-            return jsonify({**cached_result, 'from_cache': True})
+            # Still save to database even if cached
+            teacher_id = get_current_teacher()
+            analysis_id, share_id = save_analysis(teacher_id, student_name, text, cached_result)
+            cached_result['analysis_id'] = analysis_id
+            cached_result['share_id'] = share_id
+            cached_result['is_public'] = False
+            cached_result['from_cache'] = True
+            return jsonify(cached_result)
     
     # Perform analysis using OpenAI
     feedback = analyze_arabic_text(text)
@@ -349,7 +379,32 @@ def view_shared_analysis(share_id):
 @app.route('/health')
 def health():
     """Health check endpoint"""
-    return jsonify({'status': 'ok'})
+    health_status = {
+        'status': 'ok',
+        'database': 'unknown',
+        'environment': env
+    }
+    
+    # Check database connectivity
+    try:
+        from modules.database import get_db_connection, USE_POSTGRES
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        if USE_POSTGRES:
+            cursor.execute('SELECT 1')
+        else:
+            cursor.execute('SELECT 1')
+        
+        cursor.close()
+        conn.close()
+        health_status['database'] = 'connected'
+        health_status['database_type'] = 'PostgreSQL' if USE_POSTGRES else 'SQLite'
+    except Exception as e:
+        health_status['database'] = f'error: {str(e)}'
+        health_status['status'] = 'degraded'
+    
+    return jsonify(health_status)
 
 
 if __name__ == '__main__':

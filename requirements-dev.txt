@@ -13,6 +13,4 @@ reportlab==4.0.9
 arabic-reshaper==3.0.0
 python-bidi==0.4.2
 
-# Database (PostgreSQL for production)
-# Note: For local development, use requirements-dev.txt instead
-psycopg2-binary==2.9.9
+# No psycopg2 needed for local development (uses SQLite)

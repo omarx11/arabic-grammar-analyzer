@@ -28,7 +28,7 @@ if not exist ".env" (
 REM Install/Update requirements
 echo.
 echo Installing/Updating dependencies...
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 
 REM Create necessary directories
 if not exist "data" mkdir data

@@ -174,10 +174,12 @@
 
 .tab-content {
     display: none;
+    overflow: visible;
 }
 
 .tab-content.active {
     display: block;
+    overflow: visible;
 }
 
 /* Loading Spinner */

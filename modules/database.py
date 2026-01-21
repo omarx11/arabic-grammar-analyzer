@@ -31,7 +31,11 @@ if USE_POSTGRES:
 def get_db_connection():
     """Get database connection based on environment"""
     if USE_POSTGRES and DATABASE_URL:
-        return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+        try:
+            return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+        except Exception as e:
+            print(f"PostgreSQL connection error: {e}")
+            raise
     else:
         return sqlite3.connect(DB_PATH)
 
@@ -58,6 +62,17 @@ def init_db():
                     is_public INTEGER DEFAULT 0,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
+            ''')
+            
+            # Create index for faster queries
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_analyses_created_at 
+                ON analyses(created_at DESC)
+            ''')
+            
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_analyses_teacher_student 
+                ON analyses(teacher_id, student_name)
             ''')
             
             # Create students table
@@ -96,6 +111,17 @@ def init_db():
                     is_public INTEGER DEFAULT 0,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
+            ''')
+            
+            # Create index for faster queries
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_analyses_created_at 
+                ON analyses(created_at DESC)
+            ''')
+            
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_analyses_teacher_student 
+                ON analyses(teacher_id, student_name)
             ''')
             
             # Create students table
@@ -291,6 +317,26 @@ def delete_analysis(analysis_id, teacher_id):
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        # First, get the original_text so we can delete the cache entry
+        original_text = None
+        if USE_POSTGRES:
+            cursor.execute('''
+                SELECT original_text FROM analyses
+                WHERE id = %s AND teacher_id = %s
+            ''', (analysis_id, teacher_id))
+            row = cursor.fetchone()
+            if row:
+                original_text = row['original_text']
+        else:
+            cursor.execute('''
+                SELECT original_text FROM analyses
+                WHERE id = ? AND teacher_id = ?
+            ''', (analysis_id, teacher_id))
+            row = cursor.fetchone()
+            if row:
+                original_text = row[0]
+        
+        # Now delete from database
         if USE_POSTGRES:
             cursor.execute('''
                 DELETE FROM analyses
@@ -306,6 +352,28 @@ def delete_analysis(analysis_id, teacher_id):
         deleted = cursor.rowcount > 0
         cursor.close()
         conn.close()
+        
+        # Delete from cache if we found the original text
+        if deleted and original_text:
+            try:
+                from modules.cache_manager import get_cache_key
+                import os
+                cache_key = get_cache_key(original_text)
+                # Get cache directory
+                try:
+                    from config import get_config
+                    config = get_config(os.getenv('FLASK_ENV', 'production'))
+                    cache_dir = config.CACHE_DIR if hasattr(config, 'CACHE_DIR') else os.path.join('/tmp', 'cache')
+                except:
+                    cache_dir = os.path.join('/tmp', 'cache')
+                
+                cache_file = os.path.join(cache_dir, f"{cache_key}.json")
+                if os.path.exists(cache_file):
+                    os.remove(cache_file)
+                    print(f"Cache deleted for analysis {analysis_id}")
+            except Exception as cache_error:
+                print(f"Cache deletion warning: {cache_error}")
+                # Don't fail the whole deletion if cache deletion fails
         
         return deleted
     except Exception as e:

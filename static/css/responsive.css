@@ -35,6 +35,315 @@
 
     .button-group {
         flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Results Actions - Fix Arabic button overflow */
+    .results-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .results-actions {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .results-actions .btn {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Mobile-friendly buttons */
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        gap: 6px;
+    }
+
+    .btn-icon {
+        font-size: 1.1rem;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .tab-btn {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+    }
+
+    .theme-toggle {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+
+    .student-card {
+        padding: 12px;
+        font-size: 0.9rem;
+        gap: 6px;
+    }
+
+    .delete-student-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+
+    .student-selector {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .student-dropdown {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .filter-section {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-dropdown,
+    .filter-date {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+
+    /* History List Mobile Optimization */
+    .history-item {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .history-info {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .history-info strong {
+        min-width: auto;
+        font-size: 1rem;
+        display: block;
+        width: 100%;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .history-info span {
+        font-size: 0.85rem;
+        display: block;
+        width: 100%;
+    }
+
+    .history-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        width: 100%;
+    }
+
+    .history-actions .btn-sm {
+        width: 100%;
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+
+    /* History Results Mobile Optimization */
+    .history-results {
+        padding: 12px;
+        margin-top: 15px;
+    }
+
+    .history-results .results-header {
+        flex-direction: column;
+        gap: 10px;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+
+    .history-results .results-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .history-results .results-header .btn {
+        width: 100%;
+        padding: 8px 15px;
+        font-size: 0.85rem;
+    }
+
+    /* Results Section Mobile - Make everything compact */
+    .section-title {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+    }
+
+    .original-text-section {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    .original-text-section h4 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .original-text-box {
+        padding: 12px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .feedback-item {
+        padding: 12px;
+    }
+
+    .feedback-message {
+        font-size: 0.95rem;
+    }
+
+    .feedback-type {
+        font-size: 0.8rem;
+    }
+
+    .feedback-detail,
+    .feedback-explanation,
+    .feedback-example,
+    .feedback-improvement {
+        font-size: 0.9rem;
+        padding: 8px;
+        margin: 6px 0;
+    }
+
+    .overall-feedback-box {
+        padding: 12px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .score-card {
+        padding: 20px;
+    }
+
+    .score-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    /* Stat Cards Mobile Optimization - Force 2x2 grid (2 rows) */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, auto);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-icon {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+    }
+
+    .stat-value {
+        font-size: 1.4rem;
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+    }
+
+    /* Tables Mobile - Smaller padding and fonts */
+    .table-container {
+        margin-bottom: 15px;
+    }
+
+    .grammar-table td,
+    .errors-table td {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+        padding-right: 42%;
+    }
+
+    .grammar-table td::before,
+    .errors-table td::before {
+        font-size: 0.85rem;
+        right: 8px;
+    }
+
+    /* Tooltip Icons - Smaller on mobile */
+    .info-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+    }
+
+    .tooltip-icons {
+        gap: 6px;
+    }
+
+    /* Students Section Mobile Optimization */
+    .students-grid {
+        margin-bottom: 15px;
+    }
+
+    .students-grid h4 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .students-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    /* Footer Mobile Optimization */
+    .footer {
+        flex-direction: column;
+        padding: 15px;
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    .footer p {
+        font-size: 0.95rem;
+        text-align: center;
+    }
+
+    .footer #sultan {
+        font-size: 0.9rem;
+    }
+
+    .footer-small {
+        display: none;
+    }
+
+    /* Notes Section Mobile Optimization */
+    .feedback-section h4 {
+        font-size: 1rem;
+    }
+
+    .feedback-section p {
+        font-size: 0.9rem;
+        line-height: 1.6;
     }
 
     .stats-grid {
@@ -131,5 +440,236 @@
 
     .stats-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Extra small buttons for very small screens */
+    .btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        gap: 5px;
+    }
+
+    .btn-icon {
+        font-size: 1rem;
+    }
+
+    .btn-sm {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    .tab-btn {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .student-card {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .delete-student-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 11px;
+    }
+
+    .button-group {
+        gap: 8px;
+    }
+
+    .text-input {
+        padding: 15px;
+        font-size: 1rem;
+    }
+
+    /* Results Actions - Extra small screens */
+    .results-actions .btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* History List - Extra small screens */
+    .history-item {
+        padding: 10px;
+    }
+
+    .history-info strong {
+        font-size: 0.95rem;
+    }
+
+    .history-info span {
+        font-size: 0.8rem;
+    }
+
+    .history-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+
+    .history-actions .btn-sm {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+
+    /* History Results - Extra small screens */
+    .history-results {
+        padding: 10px;
+    }
+
+    .history-results .results-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .history-results .results-header .btn {
+        padding: 7px 12px;
+        font-size: 0.8rem;
+    }
+
+    /* Results Section - Extra compact */
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .original-text-section {
+        padding: 10px;
+    }
+
+    .original-text-section h4 {
+        font-size: 0.95rem;
+    }
+
+    .original-text-box {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .feedback-item {
+        padding: 10px;
+    }
+
+    .feedback-message {
+        font-size: 0.9rem;
+    }
+
+    .feedback-type {
+        font-size: 0.75rem;
+    }
+
+    .feedback-detail,
+    .feedback-explanation,
+    .feedback-example,
+    .feedback-improvement {
+        font-size: 0.85rem;
+        padding: 6px;
+    }
+
+    .overall-feedback-box {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .score-card {
+        padding: 15px;
+    }
+
+    .score-card h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Stat Cards - Extra compact but still 2 columns for 2 rows */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, auto);
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .stat-icon {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    /* Tables - Extra compact */
+    .grammar-table td,
+    .errors-table td {
+        padding: 10px 6px;
+        font-size: 0.85rem;
+        padding-right: 40%;
+    }
+
+    .grammar-table td::before,
+    .errors-table td::before {
+        font-size: 0.8rem;
+        right: 6px;
+    }
+
+    /* Tooltip Icons - Even smaller */
+    .info-icon {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+    }
+
+    .tooltip-icons {
+        gap: 5px;
+    }
+
+    /* Students Section - Extra compact */
+    .students-grid h4 {
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+    }
+
+    .students-list {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    /* Footer - Extra compact */
+    .footer {
+        padding: 12px;
+        margin-top: 15px;
+    }
+
+    .footer p {
+        font-size: 0.85rem;
+    }
+
+    .footer #sultan {
+        font-size: 0.85rem;
+    }
+
+    .footer-small {
+        font-size: 0.75rem;
+    }
+
+    /* Notes Section - Extra compact */
+    .feedback-section h4 {
+        font-size: 0.95rem;
+    }
+
+    .feedback-section p {
+        font-size: 0.85rem;
     }
 }

@@ -5,6 +5,7 @@
 /* Table Container */
 .table-container {
     overflow-x: auto;
+    overflow-y: visible;
     border-radius: 10px;
     border: 1px solid var(--border-color);
     margin-bottom: 20px;
@@ -17,6 +18,12 @@
     border-collapse: collapse;
     background: var(--card-bg);
     transition: background 0.3s ease;
+    overflow: visible;
+}
+
+.grammar-table tbody,
+.errors-table tbody {
+    overflow: visible;
 }
 
 .grammar-table th, 
@@ -40,6 +47,7 @@
     text-align: right;
     vertical-align: top;
     line-height: 1.6;
+    overflow: visible;
 }
 
 .grammar-table tbody tr:hover, 
@@ -58,4 +66,143 @@
     border-radius: 3px;
     font-weight: 600;
     color: var(--text-primary);
+}
+/* Explanation Cell with Tooltips */
+.explanation-cell {
+    position: relative;
+    overflow: visible;
+}
+
+.explanation-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: visible;
+}
+
+.tooltip-icons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    overflow: visible;
+}
+
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    position: relative;
+    user-select: none;
+    z-index: 1;
+}
+
+.info-icon[data-tooltip-type="message"] {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.info-icon[data-tooltip-type="example"] {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+}
+
+.info-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.info-icon:active {
+    transform: scale(0.95);
+}
+
+/* Tooltip - Hidden by default */
+.info-icon::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 30, 30, 0.95);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: normal;
+    width: max-content;
+    max-width: 300px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+    text-align: right;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Tooltip Arrow */
+.info-icon::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(30, 30, 30, 0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10000;
+}
+
+/* Tooltip Arrow */
+.info-icon::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 50%;
+    transform: translateX(50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(30, 30, 30, 0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10000;
+}
+
+/* Click-only tooltips for both mobile and desktop */
+.info-icon.active::before,
+.info-icon.active::after {
+    opacity: 1;
+}
+
+.info-icon.active::before {
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .info-icon::before {
+        max-width: calc(100vw - 40px);
+        font-size: 12px;
+        padding: 10px 14px;
+        word-wrap: break-word;
+    }
+    
+    .info-icon.active::before {
+        transform: translateX(-50%) translateY(-5px);
+    }
+    
+    /* Extra small screens - even more compact */
+    @media (max-width: 480px) {
+        .info-icon::before {
+            max-width: calc(100vw - 30px);
+            font-size: 11px;
+            padding: 8px 12px;
+        }
+    }
 }

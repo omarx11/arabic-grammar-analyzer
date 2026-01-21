@@ -11,14 +11,6 @@ from dotenv import load_dotenv
 load_dotenv()
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-def extract_sentence_for_word(text, word):
-    """Extract the sentence containing a specific word"""
-    sentences = re.split(r'[.!?،؛]', text)
-    for sentence in sentences:
-        if word in sentence:
-            return sentence.strip()
-    return word
-
 def analyze_arabic_text(text):
     """Analyze Arabic text for grammar and spelling errors"""
     
@@ -48,54 +40,59 @@ def analyze_arabic_text(text):
     words = text.split()
     feedback['word_count'] = len(words)
     
-    # Use AI for comprehensive analysis with optimized few-shot learning
-    prompt = f"""أنت محلل لغة عربية خبير. افحص النص وسجل الأخطاء الإملائية والنحوية الواضحة فقط.
+    # Use AI for comprehensive analysis with context-aware checking
+    prompt = f"""أنت محلل لغة عربية خبير. حلل النص إملائياً ونحوياً مع مراعاة السياق والمعنى الكامل.
 
 ===== النص =====
 {text}
 ===== نهاية =====
 
-⚡ **قواعد أساسية:**
-1. ⛔ لا تصحح الكلمات العامية إلى الفصحى (روحت، رحت، شلون، زين، بس، حلو، يلا، شوي، وين ← كلها مقبولة)
-2. صحح فقط الأخطاء الإملائية الحقيقية
-3. لا تضع أخطاء على كلمات صحيحة (كلكم، كلهم ← صحيحة)
+📋 **قواعد التصحيح:**
+1. اقرأ النص كاملاً أولاً وافهم المعنى والسياق العام
+2. تعرف على العبارات والجمل الشائعة (مثل: السلام عليكم ورحمة الله وبركاته)
+3. راجع كل كلمة إملائياً ونحوياً - لا تتخطى أي كلمة
+4. إذا وجدت كلمة غريبة أو محرفة - قارنها بالسياق لتعرف الكلمة الصحيحة
+5. أنواع الأخطاء الإملائية:
+   • نقص "ال" التعريف: اسلام → السلام، سوق → السوق، خبز → الخبز
+   • نقص أو تحريف حروف كاملة: تبرقاتا → وبركاته (الواو ناقصة والحروف محرفة)
+   • التاء المربوطة (ة/ت): رحمت → رحمة
+   • اسم الجلالة: اللاه → الله
+   • الهمزات بجميع أشكالها: امس → أمس، ءامن → آمن، مسؤل → مسؤول
+   • كلمات متصلة: ماعرفت → ما عرفت
+   • حروف ناقصة: بيت → للبيت أو إلى البيت
+6. أنواع الأخطاء النحوية:
+   • استخدام حروف الجر الخاطئة
+   • ترتيب الكلمات
+   • التذكير والتأنيث
+   • الضمائر
+7. التشكيل والحركات الخاطئة:
+   • حركات خاطئة أو غير ضرورية: خِبز → خبز أو الخبز
+   • تشكيل غير صحيح على الكلمات
 
-📋 **أخطاء تحتاج تصحيح:**
-• نقص "ال": اسلام→السلام، سوق(محدد)→السوق، بيت(محدد)→البيت
-• تاء مربوطة/مفتوحة: ورحمت→ورحمة، جماعه→جماعة
-• اسم الجلالة: اللاه→الله
-• كلمات خاطئة: تبرقاتا→وبركاته، اشللونكن→شلونكن
-• همزة: امس→أمس
-• كلمات متصلة: ماعرفت→ما عرفت
-• ضمائر: عليكن→عليكم (للمذكر)
+⚠️ قواعد مهمة:
+• الأولوية للسياق - إذا كانت كلمة محرفة تماماً، استخدم السياق لمعرفة الكلمة الصحيحة
+• لا تصحح الكلمة حرفياً فقط - انظر للمعنى المقصود
+• راجع التشكيل والحركات - إذا كانت خاطئة أو غير ضرورية، صححها
+• لا تصحح اللهجات (مثل: روحت، شفت) - هي مقبولة
+• راجع الأخطاء الإملائية والنحوية معاً
+• لا تترك أي كلمة دون فحص - حتى لو بدت بسيطة
 
-🎯 **أمثلة سريعة:**
-
-✓ "اسلام عليكن" → أخطاء: اسلام(السلام)، عليكن(عليكم)
-✓ "ورحمت اللاه تبرقاتا" → أخطاء: ورحمت(ورحمة)، اللاه(الله)، تبرقاتا(وبركاته)
-✓ "اشللونكن يا جماعه كلكم" → أخطاء: اشللونكن(شلونكن)، جماعه(جماعة) | ✓كلكم صحيح
-✓ "امس روحت سوق" → أخطاء: امس(أمس)، سوق(السوق) | ✓روحت صحيح(عامية)
-✓ "بس ماعرفت زين" → أخطاء: ماعرفت(ما عرفت) | ✓بس وزين صحيحة(عامية)
-
-⚠️ مهم: أرجع JSON صالح فقط - لا نص قبله أو بعده!
-
-📄 صيغة JSON (التزم بها تمامًا):
+📄 صيغة JSON (التزم بها تمامًا - كل حقل يجب أن يكون مكتملاً):
 {{
   "errors": [
     {{
       "type": "إملائي",
       "word": "الكلمة الخاطئة",
-      "sentence": "الجملة الكاملة",
-      "correction": "التصحيح",
-      "message": "شرح الخطأ",
-      "explanation": "شرح القاعدة",
-      "example": "مثال على الاستخدام الصحيح"
+      "correction": "التصحيح الصحيح",
+      "message": "شرح مفصل وكامل للخطأ (جملة كاملة)",
+      "explanation": "شرح القاعدة النحوية أو الإملائية كاملة (جملة كاملة)",
+      "example": "مثال كامل على الاستخدام الصحيح (جملة كاملة)"
     }}
   ],
   "suggestions": [],
   "grammar_analysis": [],
   "score": 85,
-  "overall_feedback": "ملاحظات عامة"
+  "overall_feedback": "ملاحظة عامة مختصرة على النص (جملة واحدة فقط - لا تكرر نصائح واضحة)"
 }}"""
 
     try:
@@ -103,16 +100,21 @@ def analyze_arabic_text(text):
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "محلل لغة عربية خبير. قواعد: 1) لا تصحح العامية للفصحى (روحت،شلون،زين،بس=مقبولة) 2) صحح الأخطاء الإملائية فقط 3) كلكم/كلهم صحيحة 4) تجنب False Positives. أرجع JSON صالح فقط."},
+                {"role": "system", "content": "محلل لغة عربية خبير. حلل السياق بعناية قبل التصحيح. اكتب شروحات كاملة ومفصلة - لا تختصر أبداً. كل حقل يجب أن يحتوي على جملة كاملة ومفهومة. أرجع JSON صالح كامل فقط."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.2,
-            max_tokens=2000,
+            max_tokens=3000,  # Increased to prevent truncation
             response_format={"type": "json_object"}
         )
         
         # Extract the response
         result_text = response.choices[0].message.content.strip()
+        
+        # Check if response was truncated
+        finish_reason = response.choices[0].finish_reason
+        if finish_reason == 'length':
+            print("Warning: OpenAI response was truncated due to max_tokens limit")
         
         # Clean JSON from markdown code blocks and other formatting
         result_text = result_text.replace('```json', '').replace('```', '').strip()
@@ -129,6 +131,20 @@ def analyze_arabic_text(text):
             ai_errors = []
             if 'errors' in analysis and isinstance(analysis['errors'], list):
                 ai_errors = analysis['errors']
+                
+                # Check and fix incomplete fields
+                for error in ai_errors:
+                    # Ensure all required fields are complete
+                    if not error.get('message') or len(error.get('message', '').strip()) < 10:
+                        print(f"Warning: Incomplete 'message' for word: {error.get('word')}")
+                        error['message'] = 'يحتاج إلى تصحيح'
+                    
+                    if not error.get('explanation') or len(error.get('explanation', '').strip()) < 10:
+                        print(f"Warning: Incomplete 'explanation' for word: {error.get('word')}")
+                        error['explanation'] = 'يرجى مراجعة القاعدة النحوية أو الإملائية'
+                    
+                    if not error.get('example'):
+                        error['example'] = f"مثال: {error.get('correction', '')}"
 
             # Update feedback with AI errors only
             feedback['errors'] = ai_errors
@@ -159,10 +175,23 @@ def analyze_arabic_text(text):
             feedback['score'] = 0
     
     except Exception as e:
-        feedback['errors'].append({
-            'type': 'api_error',
-            'message': f'حدث خطأ أثناء التحليل: {str(e)}'
-        })
+        error_message = str(e).lower()
+        
+        # Check if it's a quota/billing error
+        if 'quota' in error_message or 'insufficient_quota' in error_message or 'billing' in error_message or 'rate_limit' in error_message:
+            feedback['errors'].append({
+                'type': 'quota_error',
+                'message': 'نفدت رصيد API',
+                'error_details': str(e)
+            })
+            feedback['quota_exceeded'] = True
+        else:
+            feedback['errors'].append({
+                'type': 'api_error',
+                'message': f'حدث خطأ أثناء التحليل: {str(e)}'
+            })
+        
         feedback['score'] = 0
+        print(f"API Error: {str(e)}")
     
     return feedback

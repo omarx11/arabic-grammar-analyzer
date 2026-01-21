@@ -179,6 +179,12 @@ async function performAnalysis(text, studentName) {
             throw new Error(data.error_ar || data.error || 'حدث خطأ في التحليل');
         }
         
+        // Check for quota error
+        if (data.quota_exceeded === true) {
+            showQuotaErrorModal();
+            return;
+        }
+        
         window.currentAnalysisId = data.analysis_id;
         window.currentShareId = data.share_id;
         window.currentIsPublic = data.is_public || false;
@@ -267,11 +273,25 @@ function populateResultsDisplay(data, containerElement, originalText = null) {
             
             result.errors.forEach(error => {
                 const row = document.createElement('tr');
+                
+                // Build the explanation cell with message and example tooltips
+                const explanationContent = error.explanation || error.message || '-';
+                const messageTooltip = error.message ? `<span class="info-icon" data-tooltip="${escapeHtml(error.message)}" data-tooltip-type="message">ℹ️</span>` : '';
+                const exampleTooltip = error.example ? `<span class="info-icon" data-tooltip="مثال: ${escapeHtml(error.example)}" data-tooltip-type="example">💡</span>` : '';
+                
                 row.innerHTML = `
                     <td data-label="الكلمة"><strong style="color:#dc2626;">${error.word || '-'}</strong></td>
                     <td data-label="التصحيح"><strong style="color:#16a34a;">${error.correction || '-'}</strong></td>
                     <td data-label="النوع"><span class="error-tag">${error.type || 'خطأ'}</span></td>
-                    <td data-label="الشرح">${error.explanation || error.message || '-'}</td>
+                    <td data-label="الشرح" class="explanation-cell">
+                        <div class="explanation-content">
+                            ${explanationContent}
+                            <div class="tooltip-icons">
+                                ${messageTooltip}
+                                ${exampleTooltip}
+                            </div>
+                        </div>
+                    </td>
                 `;
                 errorsTableBody.appendChild(row);
             });
@@ -281,15 +301,13 @@ function populateResultsDisplay(data, containerElement, originalText = null) {
     }
     
     // Handle overall feedback
-    const feedbackSection = containerElement.querySelector('#overallFeedback, .overall-feedback-section');
-    if (feedbackSection) {
-        const feedbackText = feedbackSection.querySelector('.overall-feedback-box p, #overallFeedbackText');
-        
+    const feedbackSection = containerElement.querySelector('#feedbackSection');
+    const feedbackText = containerElement.querySelector('#feedbackText');
+    
+    if (feedbackSection && feedbackText) {
         if (result.overall_feedback || result.feedback) {
             feedbackSection.classList.remove('hidden');
-            if (feedbackText) {
-                feedbackText.textContent = result.overall_feedback || result.feedback;
-            }
+            feedbackText.textContent = result.overall_feedback || result.feedback;
         } else {
             feedbackSection.classList.add('hidden');
         }
@@ -950,3 +968,54 @@ function showConfirm(message, onYes, onNo = null) {
     noBtn.onclick = () => { modal.classList.add('hidden'); if (onNo) onNo(); };
     modal.onclick = (e) => { if (e.target === modal) { modal.classList.add('hidden'); if (onNo) onNo(); } };
 }
+
+// Show quota error modal
+function showQuotaErrorModal() {
+    const modal = document.getElementById('quotaErrorModal');
+    const closeQuotaModalBtn = document.getElementById('closeQuotaModalBtn');
+    const closeQuotaBtn = document.getElementById('closeQuotaBtn');
+    
+    modal.classList.remove('hidden');
+    
+    const closeModal = () => modal.classList.add('hidden');
+    
+    closeQuotaModalBtn.onclick = closeModal;
+    closeQuotaBtn.onclick = closeModal;
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+}
+
+// Utility function to escape HTML
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Initialize tooltips for mobile and desktop
+document.addEventListener('DOMContentLoaded', () => {
+    // Delegate tooltip events to the document for dynamically added elements
+    document.addEventListener('click', (e) => {
+        const icon = e.target.closest('.info-icon');
+        if (icon) {
+            e.stopPropagation();
+            
+            // Remove any existing active tooltips
+            document.querySelectorAll('.info-icon.active').forEach(el => {
+                if (el !== icon) el.classList.remove('active');
+            });
+            
+            // Toggle this tooltip
+            icon.classList.toggle('active');
+        } else {
+            // Click outside - close all tooltips
+            document.querySelectorAll('.info-icon.active').forEach(el => {
+                el.classList.remove('active');
+            });
+        }
+    });
+});

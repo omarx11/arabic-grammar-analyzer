@@ -95,9 +95,14 @@ def clear_cache():
     """Clear all cached analyses"""
     try:
         init_cache()
+        if not os.path.exists(CACHE_DIR):
+            return
         for filename in os.listdir(CACHE_DIR):
             if filename.endswith('.json'):
-                os.remove(os.path.join(CACHE_DIR, filename))
+                try:
+                    os.remove(os.path.join(CACHE_DIR, filename))
+                except Exception:
+                    pass  # Continue even if one file fails
     except Exception as e:
         print(f"Clear cache error: {e}")
 

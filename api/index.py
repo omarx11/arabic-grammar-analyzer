@@ -11,3 +11,6 @@ from app import app
 
 # Vercel expects the Flask app to be available as 'app'
 # This is the handler for all requests
+
+# For Vercel debugging
+print(f"Vercel handler loaded - Environment: {os.getenv('FLASK_ENV', 'production')}")
