@@ -19,8 +19,9 @@ class Config:
     UPLOAD_FOLDER = '/tmp/uploads'  # Use /tmp for Vercel serverless
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff'}
     
-    # Database
-    DB_PATH = os.path.join('/tmp', 'analysis_history.db')  # Use /tmp for Vercel
+    # Database - PostgreSQL for production, SQLite for local
+    DATABASE_URL = os.getenv('DATABASE_URL')  # PostgreSQL connection string for production
+    DB_PATH = os.path.join('/tmp', 'analysis_history.db')  # SQLite fallback (not persistent on Vercel!)
     
     # Cache
     CACHE_DIR = os.path.join('/tmp', 'cache')  # Use /tmp for Vercel
@@ -35,7 +36,8 @@ class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
     UPLOAD_FOLDER = 'uploads'  # Local folder for development
-    DB_PATH = os.path.join('data', 'analysis_history.db')  # Local DB
+    DB_PATH = os.path.join('data', 'analysis_history.db')  # Local SQLite DB
+    DATABASE_URL = None  # Force SQLite for local development
     CACHE_DIR = os.path.join('data', 'cache')  # Local cache
 
 class ProductionConfig(Config):
